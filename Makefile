@@ -1,5 +1,5 @@
 all:
-	javac -cp ./core.jar gpc.java
+	javac -cp ./core.jar *.java
 run:
 	java -cp ./core.jar:./ gpc
 clean:

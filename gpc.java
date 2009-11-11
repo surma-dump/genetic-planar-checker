@@ -13,13 +13,30 @@ import java.util.zip.*;
 import java.util.regex.*; 
 
 public class gpc extends PApplet {
-	private Vector<Point> p ;
-	private Point act ;
+	private Graph g ;
+
+	public void setupGraph() {
+		g = new Graph() ;
+		Point p[] = {new Point(10, 10), 
+				new Point(50,10),
+				new Point(10,50),
+				new Point(50,50)} ;
+		g.addPoints(p) ;
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				if (i!=j) {
+					g.connect(p[i],p[j]) ;
+				}
+			}
+		}
+
+	}
+
 	public void setup() {
-		p = new Vector<Point>() ;
 		size(300,300) ;
 		background(0) ;
 		frameRate(25) ;
+		setupGraph() ;
 	}
 
 	public void drawPoint(Point p, boolean act) {
@@ -42,45 +59,13 @@ public class gpc extends PApplet {
 	}
 
 	public void draw() {
-		fill(0) ;
-		stroke(0) ;
-		rect(0,0,width,height) ;
-		for(Point _p : p) {
-			drawPoint(_p,(_p.x-mouseX)*(_p.x-mouseX) + (_p.y-mouseY)*(_p.y-mouseY) <= 100) ;
-		}
-	}
-
-	public void mouseDragged() {
-		if (act != null) {
-			act.x = mouseX ;
-			act.y = mouseY ;
-		}
-	}
-
-//	public void mouseDragged() {
-//		if (act != null) {
-//			fill(0) ;
-//			stroke(0) ;
-//			rect(act.x-10,act.y-10,20,20) ;
-//			act.x = mouseX ;
-//			act.y = mouseY ;
-//			drawPoint(act, true) ;
-//		}
-//	}
-
-	public void mousePressed() {
-		for(Point _p : p) {
-			if((_p.x-mouseX)*(_p.x-mouseX) + (_p.y-mouseY)*(_p.y-mouseY) <= 100) {
-				act = _p ;
+		for(Point p : g.getPoints()) {
+			drawPoint(p,false) ;
+			for(Point k : g.getConnections(p)) {
+				stroke(80) ;
+				line(p.x, p.y, k.x, k.y) ;
 			}
 		}
-		if(act == null) {
-			p.add(new Point(mouseX,mouseY)) ;
-		}
-	}
-
-	public void mouseReleased() {
-		act = null ;
 	}
 
 	public static void main(String args[]) {
